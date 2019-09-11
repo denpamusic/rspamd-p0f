@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# PROVIDE: p0f
+# REQUIRE: DAEMON
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="p0f"
+rcvar=p0f_enable
+
+load_rc_config $name
+
+: ${p0f_enable="NO"}
+: ${p0f_filter="tcp dst port 25"}
+: ${p0f_socket="/tmp/p0f.sock"}
+: ${p0f_pidfile="/var/run/p0f.pid"}
+: ${p0f_args="-S 20"}
+
+pidfile="$p0f_pidfile"
+procname="/usr/local/bin/p0f"
+
+command="/usr/sbin/daemon"
+command_args="-fp ${p0f_pidfile} /usr/local/bin/p0f -s ${p0f_socket} ${p0f_args} '${p0f_filter}'"
+
+run_rc_command "$1"
