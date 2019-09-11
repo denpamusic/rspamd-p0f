@@ -25,7 +25,7 @@ local settings = {
 
 local templates = {
    hdr = '$OS (up: $UPTIME min), (distance $DISTANCE, link: $LINK), [$IP]',
-   res = 'status: $STATUS, os: $OS, uptime: $UPTIME, distance: $DISTANCE, link: $LINK'
+   res = 'os: $OS, uptime: $UPTIME, distance: $DISTANCE, link: $LINK'
 }
 
 local function ip2bin(ip)
@@ -59,7 +59,7 @@ local function check_p0f(task)
   end
 
   local function add_p0f(result)
-    if settings.header and result.STATUS == 'ok' then
+    if settings.header then
       task:set_milter_reply({
         add_headers = { [settings.header] = get_header(result) }
       })
@@ -67,8 +67,7 @@ local function check_p0f(task)
 
     if settings.symbol then
       task:insert_result(settings.symbol, 0.0, 
-        result.STATUS == 'ok' and lua_util.template(templates.res, result) or
-         'status: ' .. result.STATUS)
+        lua_util.template(templates.res, result))
     end
   end
 
@@ -93,13 +92,14 @@ local function check_p0f(task)
       language = trim(rspamd_util.unpack(
         'I4I4I4I4I4I4I4II4i1I1I1c32c32c32c32c32c32', tostring(data)))
 
-      if status == S.BAD_QUERY then
-        rspamd_logger.errx(task, "malformed p0f query on %s", settings.socket)
+      if status ~= S.OK then
+        if status == S.BAD_QUERY then
+          rspamd_logger.errx(task, "malformed p0f query on %s", settings.socket)
+        done
         return
       end
 
       add_p0f({
-        STATUS = status == S.OK and 'ok' or 'no match',
         OS = #os_name ~= 0 and (os_name .. ' ' .. os_flavor) or 'unknown',
         UPTIME = uptime_min,
         DISTANCE = distance,
@@ -110,7 +110,7 @@ local function check_p0f(task)
 
   local ip = task:get_from_ip()
   
-  if not (ip and ip:is_valid() and not ip:is_local()) then
+  if not (ip and ip:is_valid()) or ip:is_local() then
     return
   end
 
