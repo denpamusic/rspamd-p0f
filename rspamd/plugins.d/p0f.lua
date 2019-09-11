@@ -95,7 +95,7 @@ local function check_p0f(task)
       if status ~= S.OK then
         if status == S.BAD_QUERY then
           rspamd_logger.errx(task, "malformed p0f query on %s", settings.socket)
-        done
+        end
         return
       end
 
