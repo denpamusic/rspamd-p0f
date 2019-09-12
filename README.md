@@ -32,8 +32,8 @@ timeout = 10;
 # If defined, insert symbol with lookup results
 symbol = 'P0F';
 
-# If defined, insert header with lookup results with following format
-# format "$OS (up: $UPTIME min), (distance $DISTANCE, link: $LINK), [$IP]"
+# If defined, insert header with lookup results with following format:
+# "$OS (up: $UPTIME min), (distance $DISTANCE, link: $LINK), [$IP]"
 header = false;
 
 # Patterns to match OS string against
