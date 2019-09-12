@@ -76,14 +76,6 @@ local function trim(...)
   return lua_util.unpack(vars)
 end
 
-local function make_regex_table(patterns)
-  for sym, p in pairs(patterns) do
-    patterns[sym] = rspamd_regexp.create_cached(p)
-  end
-
-  return patterns
-end
-
 local function check_p0f(task)
 
   local function get_header(result)
@@ -94,8 +86,8 @@ local function check_p0f(task)
   local function add_p0f(result)
     task:get_mempool():set_variable('os', result.OS)
 
-    for sym, r in pairs(make_regex_table(settings.patterns)) do
-      if (r:match(result.OS)) then
+    for sym, r in pairs(settings.patterns) do
+      if rspamd_regexp.create_cached(r):match(result.OS) then
         rspamd_logger.infox(task, 'matched pattern for rule %s', sym)
         task:insert_result(sym, 1.0)
       end
@@ -180,7 +172,7 @@ end
 local opts = rspamd_config:get_all_opt(N)
 
 if opts then
-  local settings = lua_util.override_defaults(settings, opts)
+  settings = lua_util.override_defaults(settings, opts)
 
   for sym in pairs(settings.patterns) do
     rspamd_logger.debugm(N, rspamd_config, 'registering: %1', {
