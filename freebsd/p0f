@@ -21,6 +21,6 @@ pidfile="$p0f_pidfile"
 procname="/usr/local/bin/p0f"
 
 command="/usr/sbin/daemon"
-command_args="-fp ${p0f_pidfile} /usr/local/bin/p0f -s ${p0f_socket} ${p0f_args} '${p0f_filter}'"
+command_args="-fp ${pidfile} ${procname} -s ${p0f_socket} ${p0f_args} '${p0f_filter}'"
 
 run_rc_command "$1"
