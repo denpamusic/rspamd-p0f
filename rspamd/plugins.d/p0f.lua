@@ -104,7 +104,7 @@ local function check_p0f(task)
 
     local _, status, _, _, _, uptime_min, _, _, _, distance, _, _, os_name,
       os_flavor, _, _, link_type, _ = trim(rspamd_util.unpack(
-        'I4I4I4I4I4I4I4II4i1I1I1c32c32c32c32c32c32', tostring(data)))
+        'I4I4I4I4I4I4I4I4I4hbbc32c32c32c32c32c32', tostring(data)))
 
     return {
       STATUS = status,
