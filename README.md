@@ -1,5 +1,8 @@
 # rspamd-p0f
 
+> :warning: **This plugin is** now part of rspamd and it's development has been **discontinued**.  
+> If you encounter any problems, feel free to report issues or submit PRs directly to the main [rspamd repository](https://github.com/rspamd/rspamd).
+
 This lua plugin provides passive OS fingerprinting feature for [rspamd](https://github.com/rspamd/rspamd) filtering system via [p0f v3](https://github.com/p0f/p0f) fingerprinter. This allows to (somewhat inaccurately) detect which operating system running on remote server and what type of connection it's using. This information can then be used as an additional factor in detecting infected PCs and botnets.
 
 ## Running p0f with API support
